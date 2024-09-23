@@ -1,0 +1,118 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Exports API",
+        "description": "L5 Swagger OpenApi description",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "test@test.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/download-excel": {
+            "post": {
+                "tags": [
+                    "Export"
+                ],
+                "summary": "Descargar Excel con transacciones",
+                "description": "Permite descargar un archivo Excel con los datos de transacciones proporcionados. El archivo es almacenado temporalmente en S3 y se devuelve una URL temporal para su descarga.",
+                "operationId": "downloadExcel",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "data": {
+                                        "description": "Datos de las transacciones a exportar",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "headings": {
+                                        "description": "Encabezados para las columnas del archivo Excel",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Archivo generado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "path": {
+                                            "description": "URL temporal para descargar el archivo",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error en la validación de la solicitud",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "The data field is required."
+                                        },
+                                        "message": {
+                                            "description": "Mensaje adicional del error",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Error en la generación del archivo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Download Exception failed"
+                                        },
+                                        "message": {
+                                            "description": "Mensaje de la excepción",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Export",
+            "description": "Export"
+        }
+    ]
+}
